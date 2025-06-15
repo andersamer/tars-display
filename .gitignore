@@ -1,0 +1,10 @@
+.env
+__pycache__/
+pic/
+venv/
+examples/
+lib/waveshare_epd/misc
+setup.py
+readme_rpi_EN.txt
+test_output.json
+.lgd-nfy0
