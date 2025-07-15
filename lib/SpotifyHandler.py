@@ -24,20 +24,22 @@ class SpotifyHandler:
 
         try:
             response = requests.get(url, headers=headers)
-            response.raise_for_status()
-            self.logger.debug(f'Status code: {response.status_code}')
-            spotify_data = response.json()
-            data = {
-                'song_name': spotify_data['item']['name'],
-                'album_name': spotify_data['item']['album']['name'],
-                'artist_name': spotify_data['item']['artists'][0]['name'],
-                'album_art_url': spotify_data['item']['album']['images'][1]['url'], # Use the medium sized image
-                'item_id': spotify_data['item']['id'],
-                'is_playing': spotify_data['is_playing']
-            }
+            if response.status_code != 204:
+                response.raise_for_status()
+                spotify_data = response.json()
+                data = {
+                    'song_name': spotify_data['item']['name'],
+                    'album_name': spotify_data['item']['album']['name'],
+                    'artist_name': spotify_data['item']['artists'][0]['name'],
+                    'album_art_url': spotify_data['item']['album']['images'][1]['url'], # Use the medium sized image
+                    'item_id': spotify_data['item']['id'],
+                    'is_playing': spotify_data['is_playing']
+                }
 
-            return data
+                return data
             # return response.json()
+            else:
+                self.logger.info('No content returned from Spotify API.')
         except Exception as e:
             self.logger.error(f'Exception occurred while making request to {url}: {repr(e)}')
 

@@ -181,9 +181,15 @@ class EPDDrawer:
 
     def download_convert_img(self, url):
         self.logger.info(f'Requesting image at "{url}"')
-        response = requests.get(url)
-        response.raise_for_status()
-        img = Image.open(BytesIO(response.content))
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            img = Image.open(BytesIO(response.content))
+        except Exception as e:
+            self.logger.error(f'Exception occurred while requesting image: {repr(e)}')
+            placeholder_image_filename = 'snoopy.bmp'
+            self.logger.warning(f'Using {placeholder_image_filename}...')
+            image = Image.open(os.path.join(self.assets_dir, placeholder_image_filename))
         img.thumbnail((self.width, self.height), Image.Resampling.BICUBIC) # Resize the image to at least fit to the screen
         img = img.convert('1') 
         return img

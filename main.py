@@ -17,10 +17,10 @@ def init_logging():
     )
     # Suppress noisy logs
     log_sources_to_suppress = [
-        'urllib3.connectionpool',
-        'urllib3.util.retry',
-        'lib.waveshare_epd.epd2in13_V4',
-        'lib.waveshare_epd.epdconfig'
+        # 'urllib3.connectionpool',
+        # 'urllib3.util.retry',
+        # 'lib.waveshare_epd.epd2in13_V4',
+        # 'lib.waveshare_epd.epdconfig'
     ]
     for log_source in log_sources_to_suppress:
         logging.getLogger(log_source).setLevel(logging.WARNING)
@@ -43,7 +43,7 @@ def main():
         drawer = EPDDrawer(controller.width, controller.height)
         controller.init()
 
-        def update_display_info(controller, drawer, song_name, artist_name):
+        def update_display_info(controller, drawer, song_name, artist_name, album_art_url):
             MARGIN_TOP = 10
             RIGHT_LIMIT = 120
             drawer.clear_canvas()
@@ -71,8 +71,9 @@ def main():
                 if current_item_id != last_item_id:
                     song_name = spotify_data['song_name']
                     artist_name = spotify_data['artist_name']
+                    album_art_url = spotify_data['album_art_url']
                     logger.info(f'New track detected: "{song_name}" by "{artist_name}"')
-                    update_display_info(controller, drawer, song_name, artist_name)
+                    update_display_info(controller, drawer, song_name, artist_name, album_art_url)
                     last_item_id = current_item_id
                 else:
                     logger.info('Same track is still playing, no update needed.')
